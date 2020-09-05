@@ -2,6 +2,8 @@
 
 ConnectMD is an online platform with the primary and express purpose to provide healthcare education online through video and content sharing.
 
+![Image of Landing Page](docs/landing-hero.png)
+
 ## Installation
 
 Close this repository from the [upstream repository](https://github.com/kosinw/connectmd) on GitHub.
