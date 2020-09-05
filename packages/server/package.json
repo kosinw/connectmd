@@ -1,6 +1,6 @@
 {
   "name": "@connectmd/server",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "private": true,
   "scripts": {
     "dev": "cross-env NODE_ENV=development tsnd --respawn --transpile-only src/index.ts",
