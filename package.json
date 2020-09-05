@@ -1,0 +1,37 @@
+{
+  "name": "connectmd",
+  "private": true,
+  "version": "0.1.0",
+  "devDependencies": {
+    "cz-conventional-changelog": "3.3.0",
+    "husky": "^4.2.5",
+    "lerna": "^3.22.1",
+    "prettier": "^2.1.1",
+    "pretty-quick": "^3.0.0"
+  },
+  "scripts": {
+    "version:new": "lerna version --no-git-tag-version --conventional-commits",
+    "dev:server": "lerna run dev --scope @connectmd/server --stream",
+    "dev:web": "lerna run dev --scope @connectmd/web --stream",
+    "dev": "lerna run dev --parallel",
+    "build:server": "lerna run build --scope @connectmd/server --stream",
+    "precommit": "pretty-quick --staged",
+    "postcommit": "git update-index -g",
+    "pretty": "prettier --write \"./**/*.{ts,tsx}\""
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "yarn precommit",
+      "post-commit": "yarn postcommit"
+    }
+  },
+  "workspaces": [
+    "packages/*"
+  ],
+  "useWorkspaces": true,
+  "config": {
+    "commitizen": {
+      "path": "./node_modules/cz-conventional-changelog"
+    }
+  }
+}
