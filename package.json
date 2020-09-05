@@ -1,6 +1,7 @@
 {
   "name": "connectmd",
   "private": true,
+  "version": "0.0.0",
   "devDependencies": {
     "concurrently": "^5.3.0",
     "cz-conventional-changelog": "3.3.0",
@@ -8,7 +9,11 @@
     "prettier": "^2.1.1"
   },
   "scripts": {
-    "version:new": "lerna version --conventional-commits"
+    "version:new": "lerna version --conventional-commits",
+    "dev:server": "",
+    "dev:web": "",
+    "dev": "concurrently \"yarn dev:server\" \"yarn dev:web\"",
+    "build:server": ""
   },
   "packages": [
     "packages/*"
