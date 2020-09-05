@@ -12,7 +12,7 @@
     "dev:server": "lerna run dev --scope @connectmd/server --stream",
     "dev:web": "lerna run dev --scope @connectmd/web --stream",
     "dev": "lerna run dev --parallel",
-    "build:server": ""
+    "build:server": "lerna run build --scope @connectmd/server --stream"
   },
   "workspaces": [
     "packages/*"
