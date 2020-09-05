@@ -1,6 +1,6 @@
 # ConnectMD
 
-ConnectMD is an online service whose primary purpose is to .
+ConnectMD is an online platform with the primary an express purpose to provide healthcare education online through video and content sharing.
 
 ## Installation
 
