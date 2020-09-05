@@ -1,0 +1,16 @@
+{
+  "name": "connectmd",
+  "private": true,
+  "devDependencies": {
+    "concurrently": "^5.3.0",
+    "lerna": "^3.22.1",
+    "prettier": "^2.1.1"
+  },
+  "scripts": {
+    "version:new": "lerna version --conventional-commits"
+  },
+  "packages": [
+    "packages/*"
+  ],
+  "useWorkspaces": true
+}
