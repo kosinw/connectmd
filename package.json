@@ -10,7 +10,7 @@
     "pretty-quick": "^3.0.0"
   },
   "scripts": {
-    "version:new": "lerna version --conventional-commits",
+    "version:new": "lerna version --no-git-tag-version --conventional-commits",
     "dev:server": "lerna run dev --scope @connectmd/server --stream",
     "dev:web": "lerna run dev --scope @connectmd/web --stream",
     "dev": "lerna run dev --parallel",
