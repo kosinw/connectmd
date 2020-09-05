@@ -25,5 +25,8 @@ export const config = {
       maxAge: 1000 * 60 * 60 * 24 * 7, // 7d
     },
   },
+  frontend: {
+    origin: process.env.FRONTEND_ORIGIN!,
+  },
   __prod__,
 };

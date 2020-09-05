@@ -5,6 +5,7 @@ import bodyParser from "body-parser";
 import helmet from "helmet";
 import compression from "compression";
 import session from "express-session";
+import cors from "cors";
 
 export const expressLoader = async ({ expressApp: app }: LoaderInterface) => {
   const { __prod__ } = config;
@@ -22,6 +23,11 @@ export const expressLoader = async ({ expressApp: app }: LoaderInterface) => {
       maxAge: config.session.cookie.maxAge,
     },
     store: new RedisStore({ client: redisConnection }),
+  };
+
+  const corsConfig: cors.CorsOptions = {
+    credentials: true,
+    origin: [config.frontend.origin],
   };
 
   /**
@@ -60,6 +66,11 @@ export const expressLoader = async ({ expressApp: app }: LoaderInterface) => {
    * Session middleware.
    */
   app.use(session(sessionConfig));
+
+  /**
+   * CORS configuration.
+   */
+  app.use(cors(corsConfig));
 
   /**
    * Middleware that transforms req.body raw strings into Javascript Objects.
