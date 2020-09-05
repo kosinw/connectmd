@@ -39,7 +39,7 @@ yarn build:server
 ```
 
 ## Contributing
-This repository follows the [gitflow workflow](https://github.com/kosinw/connectmd) for creating branches. In addition, we use [semantic versioning](https://semver.org/) for release versioning and [conventional commits](https://www.conventionalcommits.org/en/v1.0.0/). Before contributing to this project please make sure you familiarize yourself with these technologies.
+This repository follows the [git flow workflow](https://www.atlassian.com/git/tutorials/comparing-workflows/gitflow-workflow) for creating branches. In addition, we use [semantic versioning](https://semver.org/) for release versioning and [conventional commits](https://www.conventionalcommits.org/en/v1.0.0/). Before contributing to this project please make sure you familiarize yourself with these technologies.
 
 Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change. Note, that pull requests and issues are at the total discretion of the maintainer and will be rejected if they do not follow the [contributing guidelines](##Contributing).
 
