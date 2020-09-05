@@ -3,19 +3,18 @@
   "private": true,
   "version": "0.0.0",
   "devDependencies": {
-    "concurrently": "^5.3.0",
     "cz-conventional-changelog": "3.3.0",
     "lerna": "^3.22.1",
     "prettier": "^2.1.1"
   },
   "scripts": {
     "version:new": "lerna version --conventional-commits",
-    "dev:server": "",
-    "dev:web": "",
-    "dev": "concurrently \"yarn dev:server\" \"yarn dev:web\"",
+    "dev:server": "lerna run dev --scope @connectmd/server --stream",
+    "dev:web": "lerna run dev --scope @connectmd/web --stream",
+    "dev": "lerna run dev --parallel",
     "build:server": ""
   },
-  "packages": [
+  "workspaces": [
     "packages/*"
   ],
   "useWorkspaces": true,
