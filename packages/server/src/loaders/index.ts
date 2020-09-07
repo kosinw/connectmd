@@ -1,4 +1,3 @@
-import * as Express from "express";
 import { LoaderInterface } from "../types";
 import { expressLoader } from "./express";
 import { apolloLoader } from "./apollo";

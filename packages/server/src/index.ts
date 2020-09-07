@@ -4,20 +4,19 @@ import { config } from "./config";
 import { loaders } from "./loaders";
 import { logger } from "./loaders/logger";
 
-/**
- * Application entrypoint.
- */
 async function main() {
-  const app = express();
+	const app = express();
 
-  /**
-   * Load configurations for express, apollo-server, logging, etc.
-   */
-  await loaders({ expressApp: app });
+	/**
+	 * Load configurations for express, apollo-server, logging, etc.
+	 */
+	await loaders({ expressApp: app });
 
-  app.listen(config.port, () => {
-    logger.info(`server ready at port ${config.port}`);
-  });
+	app.listen(config.port, () => {
+		logger.info(`server ready at port ${config.port}`);
+	});
 }
 
-main();
+main().catch((err) => {
+	logger.error(err);
+});

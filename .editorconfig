@@ -5,7 +5,3 @@ root = true
 [*]
 end_of_line = lf
 insert_final_newline = true
-
-# Tab indentation (no size specified)
-[{*.ts,*.tsx}]
-indent_style = tab
