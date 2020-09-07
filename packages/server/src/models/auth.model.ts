@@ -1,17 +1,28 @@
-import { Model } from "objection";
+import Objection, { Model } from "objection";
 import { AuthProviderKind } from "../types";
 import * as argon2 from "argon2";
+import { Field, ID, InterfaceType } from "type-graphql";
+import { UserIdentity } from "./user.model";
+import { BaseModel } from "./base.model";
 
-export class AuthProviderModel extends Model {
-  id!: number;
-  kind!: AuthProviderKind;
+@InterfaceType({
+  resolveType: (value: AuthProvider) => value.kind as string,
+})
+export class AuthProvider extends BaseModel {
+  @Field((type) => ID)
+  id: string;
+
+  kind: AuthProviderKind;
+
   email?: string;
   password?: string;
-  identity_id!: number;
+
+  identity?: UserIdentity;
 
   static tableName = "users.auth_provider";
 
   async $beforeInsert(): Promise<void> {
+    super.$beforeInsert();
     if (this.kind === AuthProviderKind.LocalAuthProvider) {
       this.password! = await argon2.hash(this.password!);
     }
@@ -24,4 +35,15 @@ export class AuthProviderModel extends Model {
 
     return false;
   }
+
+  static relationMappings = (): Objection.RelationMappings => ({
+    identity: {
+      modelClass: UserIdentity,
+      relation: Model.BelongsToOneRelation,
+      join: {
+        from: "users.auth_provider.identity_id",
+        to: "users.identity.id",
+      },
+    },
+  });
 }

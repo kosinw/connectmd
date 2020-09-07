@@ -1,33 +1,34 @@
+import "reflect-metadata";
 import * as Knex from "knex";
 import { AuthProviderKind, UserRole } from "../src/types";
 
-export async function up(knex: Knex): Promise<void[]> {
-  return Promise.all([
-    knex.schema.createSchema("users"),
-    knex.schema.withSchema("users").createTable("auth_provider", function (t) {
-      t.increments("id").primary();
+export async function up(knex: Knex): Promise<void> {
+  return knex.schema
+    .createSchemaIfNotExists("users")
+    .withSchema("users")
+    .createTableIfNotExists("identity", function (t) {
+      t.string("id", 32).primary();
+      t.enu("role", Object.values(UserRole), {
+        useNative: true,
+        enumName: "users.user_role",
+      }).defaultTo(UserRole.User as string);
+    })
+    .createTableIfNotExists("auth_provider", function (t) {
+      t.string("id", 32).primary();
       t.enu("kind", Object.values(AuthProviderKind), {
         useNative: true,
         enumName: "users.auth_provider_kind",
       }).notNullable();
       t.string("email", 255).unique().nullable();
       t.string("password", 255).nullable();
-      t.integer("identity_id")
-        .unsigned()
+      t.string("identity_id", 32)
         .references("id")
         .inTable("users.identity")
-        .onDelete("cascade");
-    }),
-    knex.schema.withSchema("users").createTable("identity", function (t) {
-      t.increments("id").primary();
-      t.enu("role", Object.values(UserRole), {
-        useNative: true,
-        enumName: "users.user_role",
-      }).defaultTo(UserRole.User as string);
-    }),
-  ]);
+        .onDelete("cascade")
+        .onUpdate("cascade");
+    });
 }
 
 export async function down(knex: Knex): Promise<void> {
-  return knex.raw("DROP SCHEMA users CASCADE");
+  return knex.raw("DROP SCHEMA IF EXISTS users CASCADE");
 }

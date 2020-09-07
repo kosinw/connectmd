@@ -2,67 +2,69 @@ import {
   Arg,
   Ctx,
   Field,
-  ID,
   InputType,
-  InterfaceType,
   Mutation,
   ObjectType,
   Resolver,
 } from "type-graphql";
-import { AuthProviderModel } from "../models/auth.model";
-import { UserIdentityModel } from "../models/user.model";
+import { logger } from "../loaders/logger";
+import { AuthProvider } from "../models/auth.model";
+import { UserIdentity } from "../models/user.model";
 import {
   ApplicationContext,
   AuthProviderKind,
   FieldError,
   UserRole,
 } from "../types";
-import { UserIdentity } from "./user.resolvers";
-
-@InterfaceType({
-  resolveType: (value: AuthProvider) => value.kind as string,
-})
-export abstract class AuthProvider {
-  @Field((type) => ID)
-  readonly id: number;
-
-  kind: AuthProviderKind;
-}
 
 @ObjectType({ implements: AuthProvider })
 export class LocalAuthProvider extends AuthProvider {
-  @Field((type) => String)
+  @Field(() => String)
   email: string;
 }
 
 @ObjectType()
 export class UserLocalResult {
-  @Field((type) => [FieldError], { nullable: true })
+  @Field(() => [FieldError], { nullable: true })
   errors?: FieldError[];
 
-  @Field((type) => UserIdentity, { nullable: true })
+  @Field(() => UserIdentity, { nullable: true })
   identity?: UserIdentity;
 }
 
 @InputType()
 export class UserLocalInput {
-  @Field((type) => String)
+  @Field(() => String)
   email: string;
 
-  @Field((type) => String)
+  @Field(() => String)
   password: string;
 }
 
 // TODO(kosi): Move all of this logic out into services.
 @Resolver()
 export class AuthResolver {
-  @Mutation((type) => UserLocalResult)
+  @Mutation(() => Boolean)
+  logout(@Ctx() { req, res }: ApplicationContext): Promise<Boolean> {
+    return new Promise((resolve, reject) =>
+      req.session.destroy((err) => {
+        if (!!err) {
+          logger.error(err);
+          resolve(false);
+        }
+        res.clearCookie("connect.sid");
+        resolve(true);
+      })
+    );
+  }
+
+  @Mutation(() => UserLocalResult)
   async loginUserLocal(
     @Ctx() { req }: ApplicationContext,
-    @Arg("input", (type) => UserLocalInput)
+    @Arg("input", () => UserLocalInput)
     { email, password }: UserLocalInput
   ): Promise<UserLocalResult> {
-    const result = await AuthProviderModel.query()
+    const result = await AuthProvider.query()
       .where({
         kind: AuthProviderKind.LocalAuthProvider,
         email,
@@ -71,20 +73,18 @@ export class AuthResolver {
 
     if (!!result) {
       if (!!(await result.verifyPassword(password))) {
-        const identity = await UserIdentityModel.query()
-          .where({
-            id: result.identity_id,
+        const identity = await result
+          .$relatedQuery("identity")
+          .allowGraph({
+            providers: true,
           })
           .withGraphFetched({
             providers: true,
-          })
-          .first();
+          });
 
         req.session!.userId = identity.id;
 
-        return {
-          identity: identity! as UserIdentity,
-        };
+        return { identity };
       }
     }
 
@@ -98,13 +98,13 @@ export class AuthResolver {
     };
   }
 
-  @Mutation((type) => UserLocalResult)
+  @Mutation(() => UserLocalResult)
   async createUserLocal(
     @Ctx() { req }: ApplicationContext,
-    @Arg("input", (type) => UserLocalInput)
+    @Arg("input", () => UserLocalInput)
     { email, password }: UserLocalInput
   ): Promise<UserLocalResult> {
-    const result = await AuthProviderModel.query()
+    const result = await AuthProvider.query()
       .where({
         kind: AuthProviderKind.LocalAuthProvider,
         email,
@@ -116,14 +116,14 @@ export class AuthResolver {
         errors: [
           {
             field: "email",
-            message: "This email is already registered",
+            message: "This email is already registered.",
           },
         ],
       };
     }
 
     // TODO(kosi): Do some validation stuff here or something
-    const identity = await UserIdentityModel.query().insertGraphAndFetch({
+    const identity = await UserIdentity.query().insertGraphAndFetch({
       role: UserRole.User,
       providers: [
         {
@@ -136,6 +136,6 @@ export class AuthResolver {
 
     req.session!.userId = identity.id;
 
-    return { identity: identity! as UserIdentity };
+    return { identity };
   }
 }

@@ -8,7 +8,11 @@ export interface LoaderInterface {
 }
 
 export interface ApplicationContext {
-  req: Express.Request;
+  req: Express.Request & {
+    session: {
+      userId?: string;
+    };
+  };
   res: Express.Response;
   redis: Redis.Redis;
   knex: typeof knexConnection;
