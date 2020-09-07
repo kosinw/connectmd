@@ -1,5 +1,6 @@
 import * as Express from "express";
 import * as Redis from "ioredis";
+import { Field, ObjectType } from "type-graphql";
 import { knexConnection } from "./loaders/database";
 
 export interface LoaderInterface {
@@ -22,4 +23,13 @@ export enum UserRole {
 export enum AuthProviderKind {
   LocalAuthProvider = "LocalAuthProvider",
   OAuthProvider = "OAuthProvider",
+}
+
+@ObjectType()
+export class FieldError {
+  @Field((type) => String)
+  field: string;
+
+  @Field((type) => String)
+  message: string;
 }

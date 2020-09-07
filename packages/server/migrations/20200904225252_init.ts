@@ -10,8 +10,13 @@ export async function up(knex: Knex): Promise<void[]> {
         useNative: true,
         enumName: "users.auth_provider_kind",
       }).notNullable();
-      t.string("email", 255).nullable();
+      t.string("email", 255).unique().nullable();
       t.string("password", 255).nullable();
+      t.integer("identity_id")
+        .unsigned()
+        .references("id")
+        .inTable("users.identity")
+        .onDelete("cascade");
     }),
     knex.schema.withSchema("users").createTable("identity", function (t) {
       t.increments("id").primary();
@@ -19,14 +24,10 @@ export async function up(knex: Knex): Promise<void[]> {
         useNative: true,
         enumName: "users.user_role",
       }).defaultTo(UserRole.User as string);
-      t.integer("provider_id")
-        .unsigned()
-        .references("id")
-        .inTable("users.auth_provider");
     }),
   ]);
 }
 
 export async function down(knex: Knex): Promise<void> {
-  return knex.schema.dropSchemaIfExists("users");
+  return knex.raw("DROP SCHEMA users CASCADE");
 }

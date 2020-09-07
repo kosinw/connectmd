@@ -6,8 +6,7 @@ import {
   ID,
   registerEnumType,
 } from "type-graphql";
-import { logger } from "../loaders/logger";
-import { UserIdentityModel } from "../models/user.models";
+import { UserIdentityModel } from "../models/user.model";
 import { UserRole } from "../types";
 import { AuthProvider } from "./auth.resolvers";
 
@@ -23,8 +22,8 @@ export class UserIdentity {
   @Field((type) => UserRole)
   role: UserRole;
 
-  @Field((type) => AuthProvider)
-  provider: AuthProvider;
+  @Field((type) => [AuthProvider])
+  providers: AuthProvider[];
 }
 
 @Resolver()
@@ -32,10 +31,8 @@ export class UserResolver {
   @Query((returns) => [UserIdentity])
   async users(): Promise<UserIdentity[]> {
     const result = await UserIdentityModel.query().withGraphFetched({
-      provider: true,
+      providers: true,
     });
-
-    logger.info(result[0].provider.kind);
 
     return result as UserIdentity[];
   }
