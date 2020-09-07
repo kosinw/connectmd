@@ -36,7 +36,7 @@ export class AuthProvider extends BaseModel {
     return false;
   }
 
-  static relationMappings = (): Objection.RelationMappings => ({
+  static relationMappings: Objection.RelationMappingsThunk = () => ({
     identity: {
       modelClass: UserIdentity,
       relation: Model.BelongsToOneRelation,

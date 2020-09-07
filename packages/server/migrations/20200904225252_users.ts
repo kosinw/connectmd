@@ -10,14 +10,14 @@ export async function up(knex: Knex): Promise<void> {
       t.string("id", 32).primary();
       t.enu("role", Object.values(UserRole), {
         useNative: true,
-        enumName: "users.user_role",
+        enumName: "user_role",
       }).defaultTo(UserRole.User as string);
     })
     .createTableIfNotExists("auth_provider", function (t) {
       t.string("id", 32).primary();
       t.enu("kind", Object.values(AuthProviderKind), {
         useNative: true,
-        enumName: "users.auth_provider_kind",
+        enumName: "auth_provider_kind",
       }).notNullable();
       t.string("email", 255).unique().nullable();
       t.string("password", 255).nullable();

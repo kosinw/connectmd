@@ -29,6 +29,12 @@ export enum AuthProviderKind {
   OAuthProvider = "OAuthProvider",
 }
 
+export enum ProfileKind {
+  Student = "StudentProfile",
+  Professional = "ProfessionalProfile",
+  Other = "OtherProfile",
+}
+
 @ObjectType()
 export class FieldError {
   @Field((type) => String)

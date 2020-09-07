@@ -1,4 +1,4 @@
-import { Resolver, Query, Maybe, Ctx, Info } from "type-graphql";
+import { Resolver, Query, Maybe, Ctx, Arg } from "type-graphql";
 import { UserIdentity } from "../models/user.model";
 import { ApplicationContext } from "../types";
 
@@ -13,9 +13,11 @@ export class UserResolver {
         })
         .allowGraph({
           providers: true,
+          profile: true,
         })
         .withGraphFetched({
           providers: true,
+          profile: true,
         })
         .first();
 
@@ -26,15 +28,24 @@ export class UserResolver {
   }
 
   @Query(() => [UserIdentity])
-  async users(): Promise<UserIdentity[]> {
-    const result = await UserIdentity.query()
+  async users(
+    @Arg("limit", { nullable: true }) limit: number
+  ): Promise<UserIdentity[]> {
+    const query = UserIdentity.query()
       .allowGraph({
         providers: true,
+        profile: true,
       })
       .withGraphFetched({
         providers: true,
-      });
+        profile: true,
+      })
+      .orderBy("id", "DESC");
 
-    return result as UserIdentity[];
+    if (!!limit) {
+      query.limit(limit);
+    }
+
+    return await query;
   }
 }

@@ -77,9 +77,11 @@ export class AuthResolver {
           .$relatedQuery("identity")
           .allowGraph({
             providers: true,
+            profile: true,
           })
           .withGraphFetched({
             providers: true,
+            profile: true,
           });
 
         req.session!.userId = identity.id;
