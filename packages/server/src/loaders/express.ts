@@ -6,6 +6,7 @@ import helmet from "helmet";
 import compression from "compression";
 import session from "express-session";
 import cors from "cors";
+import * as pino from "pino-http";
 
 export const expressLoader = async ({ expressApp: app }: LoaderInterface) => {
   const { __prod__ } = config;
@@ -78,7 +79,12 @@ export const expressLoader = async ({ expressApp: app }: LoaderInterface) => {
   app.use(bodyParser.json());
 
   /**
-   * Middleware that transforms query parameters into rqe.params.
+   * Middleware that transforms query parameters into req.params.
    */
   app.use(bodyParser.urlencoded({ extended: false }));
+
+  /**
+   * Middleware that logs http requests.
+   */
+  app.use(pino.default());
 };

@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "cross-env NODE_ENV=development tsnd --respawn --transpile-only src/index.ts",
+    "dev": "cross-env NODE_ENV=development tsnd --respawn --transpile-only src/index.ts | pino-colada",
     "build": "tsc"
   },
   "devDependencies": {
@@ -18,6 +18,8 @@
     "@types/knex": "^0.16.1",
     "@types/node": "^14.6.4",
     "@types/pg": "^7.14.4",
+    "@types/pino": "^6.3.0",
+    "@types/pino-http": "^5.0.5",
     "cross-env": "^7.0.2",
     "ts-node-dev": "^1.0.0-pre.62",
     "typescript": "^4.0.2"
@@ -37,6 +39,9 @@
     "ioredis": "^4.17.3",
     "knex": "^0.21.5",
     "pg": "^8.3.3",
+    "pino": "^6.5.1",
+    "pino-colada": "^2.1.0",
+    "pino-http": "^5.2.0",
     "reflect-metadata": "^0.1.13",
     "type-graphql": "^1.0.0"
   }
