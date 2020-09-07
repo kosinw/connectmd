@@ -20,6 +20,11 @@ export const apolloLoader = async ({ expressApp: app }: LoaderInterface) => {
       req,
       res,
     }),
+    playground: {
+      settings: {
+        "request.credentials": "include",
+      },
+    },
   });
 
   /**
