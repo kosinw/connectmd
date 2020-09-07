@@ -6,7 +6,7 @@ import helmet from "helmet";
 import compression from "compression";
 import session from "express-session";
 import cors from "cors";
-import * as pino from "pino-http";
+import * as pino from "express-pino-logger";
 
 export const expressLoader = async ({ expressApp: app }: LoaderInterface) => {
   const { __prod__ } = config;
