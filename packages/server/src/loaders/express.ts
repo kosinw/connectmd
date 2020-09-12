@@ -1,4 +1,4 @@
-import { LoaderInterface } from "../types";
+import { LoaderType } from "../types";
 import { config } from "../config";
 import { redisConnection } from "./redis";
 import bodyParser from "body-parser";
@@ -8,7 +8,7 @@ import session from "express-session";
 import cors from "cors";
 import * as pino from "express-pino-logger";
 
-export const expressLoader = async ({ expressApp: app }: LoaderInterface) => {
+export const expressLoader = async ({ expressApp: app }: LoaderType) => {
   const { __prod__ } = config;
 
   const RedisStore = require("connect-redis")(session);

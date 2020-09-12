@@ -1,44 +1,32 @@
-import { Resolver, Query, Maybe, Ctx, Arg } from "type-graphql";
-import { UserIdentity } from "../models/user.model";
-import { ApplicationContext } from "../types";
+import { Resolver, Query, Maybe, Ctx, Arg, Authorized } from "type-graphql";
+import { UserIdentity } from "../models/user.models";
+import { ContextType, UserRole } from "../types";
 
 @Resolver()
 export class UserResolver {
-  @Query((type) => UserIdentity, { nullable: true })
-  async me(@Ctx() { req }: ApplicationContext): Promise<Maybe<UserIdentity>> {
-    if (!!req.session!.userId!) {
-      const query = UserIdentity.query()
-        .where({
-          id: req.session.userId,
-        })
-        .allowGraph({
-          providers: true,
-          profile: true,
-        })
-        .withGraphFetched({
-          providers: true,
-          profile: true,
-        })
-        .first();
+  @Authorized()
+  @Query((type) => UserIdentity)
+  async me(@Ctx() { req }: ContextType): Promise<UserIdentity> {
+    const query = UserIdentity.query()
+      .where({
+        id: req.session.userId,
+      })
+      .withGraphFetched({
+        providers: true,
+      })
+      .first();
 
-      return await query;
-    }
-
-    return null;
+    return await query;
   }
 
+  @Authorized(UserRole.Administrator)
   @Query(() => [UserIdentity])
   async users(
     @Arg("limit", { nullable: true }) limit: number
   ): Promise<UserIdentity[]> {
     const query = UserIdentity.query()
-      .allowGraph({
-        providers: true,
-        profile: true,
-      })
       .withGraphFetched({
         providers: true,
-        profile: true,
       })
       .orderBy("id", "DESC");
 

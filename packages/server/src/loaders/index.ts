@@ -1,9 +1,9 @@
-import { LoaderInterface } from "../types";
+import { LoaderType } from "../types";
 import { expressLoader } from "./express";
 import { apolloLoader } from "./apollo";
 import { logger } from "./logger";
 
-export const loaders = async ({ expressApp: app }: LoaderInterface) => {
+export const loaders = async ({ expressApp: app }: LoaderType) => {
   await expressLoader({ expressApp: app });
   logger.info("express configuration loaded successfully");
 

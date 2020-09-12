@@ -1,9 +1,9 @@
 import Objection, { Model } from "objection";
-import { AuthProviderKind } from "../types";
+import { AuthProviderKind, FieldError } from "../types";
 import * as argon2 from "argon2";
-import { Field, ID, InterfaceType } from "type-graphql";
-import { UserIdentity } from "./user.model";
-import { BaseModel } from "./base.model";
+import { Field, ID, InputType, InterfaceType, ObjectType } from "type-graphql";
+import { UserIdentity } from "./user.models";
+import { BaseModel } from "./base.models";
 
 @InterfaceType({
   resolveType: (value: AuthProvider) => value.kind as string,
@@ -46,4 +46,28 @@ export class AuthProvider extends BaseModel {
       },
     },
   });
+}
+
+@ObjectType({ implements: AuthProvider })
+export class LocalAuthProvider extends AuthProvider {
+  @Field(() => String)
+  email: string;
+}
+
+@ObjectType()
+export class UserLocalResult {
+  @Field(() => [FieldError], { nullable: true })
+  errors?: FieldError[];
+
+  @Field(() => UserIdentity, { nullable: true })
+  identity?: UserIdentity;
+}
+
+@InputType()
+export class UserLocalInput {
+  @Field(() => String)
+  email: string;
+
+  @Field(() => String)
+  password: string;
 }

@@ -1,9 +1,9 @@
 import Objection, { Model } from "objection";
 import { Field, ID, ObjectType, registerEnumType } from "type-graphql";
-import { ProfileKind, UserRole } from "../types";
-import { AuthProvider } from "./auth.model";
-import { BaseModel } from "./base.model";
-import { UserProfile } from "./profile.model";
+import { UserRole } from "../types";
+import { AuthProvider } from "./auth.models";
+import { BaseModel } from "./base.models";
+import { UserProfile } from "./profile.models";
 
 registerEnumType(UserRole, { name: "UserRole" });
 
@@ -13,7 +13,7 @@ export class UserIdentity extends BaseModel {
   id: string;
 
   @Field((type) => UserRole)
-  role!: UserRole;
+  role: UserRole;
 
   @Field((type) => [AuthProvider])
   providers: AuthProvider[];
@@ -24,14 +24,6 @@ export class UserIdentity extends BaseModel {
   static tableName = "users.identity";
 
   static relationMappings: Objection.RelationMappingsThunk = () => ({
-    profile: {
-      relation: Model.HasOneRelation,
-      modelClass: UserProfile,
-      join: {
-        from: "users.identity.id",
-        to: "users.profile.identity_id",
-      },
-    },
     providers: {
       relation: Model.HasManyRelation,
       modelClass: AuthProvider,

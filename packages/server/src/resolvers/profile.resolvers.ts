@@ -1,8 +1,19 @@
-import { Field, ObjectType } from "type-graphql";
-import { UserProfile } from "../models/profile.model";
+import { Arg, Authorized, Mutation, Resolver } from "type-graphql";
+import {
+  EditProfileInput,
+  EditProfileResponse,
+} from "../models/profile.models";
 
-@ObjectType({ implements: UserProfile })
-export class OtherProfile extends UserProfile {
-  @Field((type) => String)
-  speciality: string;
+@Resolver()
+export class ProfileResolver {
+  @Authorized()
+  @Mutation((type) => EditProfileResponse)
+  async editProfile(
+    @Arg("input") input: EditProfileInput
+  ): Promise<EditProfileResponse> {
+    console.dir(input);
+    return {
+      profile: input,
+    };
+  }
 }

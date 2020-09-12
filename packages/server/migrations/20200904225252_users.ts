@@ -11,7 +11,7 @@ export async function up(knex: Knex): Promise<void> {
       t.enu("role", Object.values(UserRole), {
         useNative: true,
         enumName: "user_role",
-      }).defaultTo(UserRole.User as string);
+      }).defaultTo(UserRole.User);
     })
     .createTableIfNotExists("auth_provider", function (t) {
       t.string("id", 32).primary();

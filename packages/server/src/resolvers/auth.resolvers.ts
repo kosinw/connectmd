@@ -1,52 +1,19 @@
-import {
-  Arg,
-  Ctx,
-  Field,
-  InputType,
-  Mutation,
-  ObjectType,
-  Resolver,
-} from "type-graphql";
+import { Arg, Ctx, Mutation, Resolver } from "type-graphql";
 import { logger } from "../loaders/logger";
-import { AuthProvider } from "../models/auth.model";
-import { UserIdentity } from "../models/user.model";
 import {
-  ApplicationContext,
-  AuthProviderKind,
-  FieldError,
-  UserRole,
-} from "../types";
-
-@ObjectType({ implements: AuthProvider })
-export class LocalAuthProvider extends AuthProvider {
-  @Field(() => String)
-  email: string;
-}
-
-@ObjectType()
-export class UserLocalResult {
-  @Field(() => [FieldError], { nullable: true })
-  errors?: FieldError[];
-
-  @Field(() => UserIdentity, { nullable: true })
-  identity?: UserIdentity;
-}
-
-@InputType()
-export class UserLocalInput {
-  @Field(() => String)
-  email: string;
-
-  @Field(() => String)
-  password: string;
-}
+  AuthProvider,
+  UserLocalInput,
+  UserLocalResult,
+} from "../models/auth.models";
+import { UserIdentity } from "../models/user.models";
+import { ContextType, AuthProviderKind, UserRole } from "../types";
 
 // TODO(kosi): Move all of this logic out into services.
 @Resolver()
 export class AuthResolver {
   @Mutation(() => Boolean)
-  logout(@Ctx() { req, res }: ApplicationContext): Promise<Boolean> {
-    return new Promise((resolve, reject) =>
+  logout(@Ctx() { req, res }: ContextType): Promise<Boolean> {
+    return new Promise((resolve) =>
       req.session.destroy((err) => {
         if (!!err) {
           logger.error(err);
@@ -60,7 +27,7 @@ export class AuthResolver {
 
   @Mutation(() => UserLocalResult)
   async loginUserLocal(
-    @Ctx() { req }: ApplicationContext,
+    @Ctx() { req }: ContextType,
     @Arg("input", () => UserLocalInput)
     { email, password }: UserLocalInput
   ): Promise<UserLocalResult> {
@@ -75,13 +42,8 @@ export class AuthResolver {
       if (!!(await result.verifyPassword(password))) {
         const identity = await result
           .$relatedQuery("identity")
-          .allowGraph({
-            providers: true,
-            profile: true,
-          })
           .withGraphFetched({
             providers: true,
-            profile: true,
           });
 
         req.session!.userId = identity.id;
@@ -102,7 +64,7 @@ export class AuthResolver {
 
   @Mutation(() => UserLocalResult)
   async createUserLocal(
-    @Ctx() { req }: ApplicationContext,
+    @Ctx() { req }: ContextType,
     @Arg("input", () => UserLocalInput)
     { email, password }: UserLocalInput
   ): Promise<UserLocalResult> {

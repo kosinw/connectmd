@@ -1,10 +1,14 @@
 import "reflect-metadata";
 import * as Knex from "knex";
 import * as faker from "faker";
-import { UserIdentity } from "../src/models/user.model";
-import { AuthProviderKind, ProfileKind, UserRole } from "../src/types";
+import { UserIdentity } from "../src/models/user.models";
+import {
+  AuthProviderKind,
+  ProfileKind,
+  StudentProfileEducation,
+  UserRole,
+} from "../src/types";
 import Objection, { Model } from "objection";
-import { stringify } from "querystring";
 
 export async function seed(knex: Knex): Promise<void> {
   // Deletes ALL existing entries
@@ -39,4 +43,24 @@ export async function seed(knex: Knex): Promise<void> {
 
   // Seeds data
   await UserIdentity.query().insertGraph(items);
+
+  // Create one super account
+  await UserIdentity.query().insertGraph({
+    role: UserRole.Administrator,
+    providers: [
+      {
+        kind: AuthProviderKind.LocalAuthProvider,
+        email: "kosinwabueze@gmail.com",
+        password: "superuser",
+      },
+    ],
+    profile: {
+      kind: ProfileKind.Student,
+      firstName: "Kosi",
+      lastName: "Nwabueze",
+      profileUri: faker.image.avatar(),
+      education: StudentProfileEducation.Undergraduate,
+      schoolName: "Harvard-Westlake",
+    },
+  });
 }
