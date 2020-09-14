@@ -3,12 +3,100 @@
 # !!!   DO NOT MODIFY THIS FILE BY YOURSELF   !!!
 # -----------------------------------------------
 
-type Query {
-  hello: [User!]!
+interface AuthProvider {
+  id: ID!
 }
 
-type User {
-  firstName: String!
-  lastName: String!
-  middleName: String!
+input EditProfileInput {
+  education: StudentProfileEducation
+  firstName: String
+  kind: ProfileKind!
+  lastName: String
+  profileUri: String
+  schoolName: String
+  speciality: String
+}
+
+type EditProfileResponse {
+  errors: [FieldError!]
+  profile: UserProfile
+}
+
+type FieldError {
+  field: String!
+  message: String!
+}
+
+type LocalAuthProvider implements AuthProvider {
+  email: String!
+  id: ID!
+}
+
+type Mutation {
+  createUserLocal(input: UserLocalInput!): UserLocalResult!
+  editProfile(input: EditProfileInput!): EditProfileResponse!
+  loginUserLocal(input: UserLocalInput!): UserLocalResult!
+  logout: Boolean!
+}
+
+type OtherProfile implements UserProfile {
+  firstName: String
+  lastName: String
+  profileUri: String
+  speciality: String!
+}
+
+enum ProfileKind {
+  Other
+  Professional
+  Student
+}
+
+type Query {
+  me: UserIdentity!
+  users(limit: Int): [UserIdentity!]!
+}
+
+type StudentProfile implements UserProfile {
+  education: StudentProfileEducation!
+  firstName: String
+  lastName: String
+  profileUri: String
+  schoolName: String!
+}
+
+enum StudentProfileEducation {
+  Graduate
+  Medical
+  Nursing
+  Other
+  Undergraduate
+}
+
+type UserIdentity {
+  id: ID!
+  profile: UserProfile
+  providers: [AuthProvider!]!
+  role: UserRole!
+}
+
+input UserLocalInput {
+  email: String!
+  password: String!
+}
+
+type UserLocalResult {
+  errors: [FieldError!]
+  identity: UserIdentity
+}
+
+interface UserProfile {
+  firstName: String
+  lastName: String
+  profileUri: String
+}
+
+enum UserRole {
+  Administrator
+  User
 }

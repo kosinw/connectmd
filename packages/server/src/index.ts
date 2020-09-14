@@ -2,10 +2,8 @@ import "reflect-metadata";
 import express from "express";
 import { config } from "./config";
 import { loaders } from "./loaders";
+import { logger } from "./loaders/logger";
 
-/**
- * Application entrypoint.
- */
 async function main() {
   const app = express();
 
@@ -15,8 +13,10 @@ async function main() {
   await loaders({ expressApp: app });
 
   app.listen(config.port, () => {
-    console.log(`🚀 Server ready at port ${config.port}`);
+    logger.info(`server ready at port ${config.port}`);
   });
 }
 
-main();
+main().catch((err) => {
+  logger.error(err);
+});
