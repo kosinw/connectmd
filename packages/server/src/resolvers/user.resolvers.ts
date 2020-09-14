@@ -1,39 +1,19 @@
-import { Resolver, Query, Maybe, Ctx, Arg, Authorized } from "type-graphql";
+import { Resolver, Query, Ctx, Arg, Authorized, Int } from "type-graphql";
 import { UserIdentity } from "../models/user.models";
+import { UserService } from "../services/user.service";
 import { ContextType, UserRole } from "../types";
 
 @Resolver()
 export class UserResolver {
   @Authorized()
   @Query((type) => UserIdentity)
-  async me(@Ctx() { req }: ContextType): Promise<UserIdentity> {
-    const query = UserIdentity.query()
-      .where({
-        id: req.session.userId,
-      })
-      .withGraphFetched({
-        providers: true,
-      })
-      .first();
-
-    return await query;
+  async me(@Ctx() { req: { session } }: ContextType) {
+    return UserService.me(session);
   }
 
   @Authorized(UserRole.Administrator)
   @Query(() => [UserIdentity])
-  async users(
-    @Arg("limit", { nullable: true }) limit: number
-  ): Promise<UserIdentity[]> {
-    const query = UserIdentity.query()
-      .withGraphFetched({
-        providers: true,
-      })
-      .orderBy("id", "DESC");
-
-    if (!!limit) {
-      query.limit(limit);
-    }
-
-    return await query;
+  async users(@Arg("limit", (type) => Int, { nullable: true }) limit?: number) {
+    return UserService.users(limit);
   }
 }

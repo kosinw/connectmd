@@ -1,65 +1,28 @@
 import { Arg, Ctx, Mutation, Resolver } from "type-graphql";
-import { logger } from "../loaders/logger";
 import {
   AuthProvider,
   UserLocalInput,
   UserLocalResult,
 } from "../models/auth.models";
 import { UserIdentity } from "../models/user.models";
+import { AuthService } from "../services/auth.service";
 import { ContextType, AuthProviderKind, UserRole } from "../types";
 
 // TODO(kosi): Move all of this logic out into services.
 @Resolver()
 export class AuthResolver {
   @Mutation(() => Boolean)
-  logout(@Ctx() { req, res }: ContextType): Promise<Boolean> {
-    return new Promise((resolve) =>
-      req.session.destroy((err) => {
-        if (!!err) {
-          logger.error(err);
-          resolve(false);
-        }
-        res.clearCookie("connect.sid");
-        resolve(true);
-      })
-    );
+  logout(@Ctx() context: ContextType) {
+    return AuthService.logout(context);
   }
 
   @Mutation(() => UserLocalResult)
   async loginUserLocal(
-    @Ctx() { req }: ContextType,
+    @Ctx() context: ContextType,
     @Arg("input", () => UserLocalInput)
-    { email, password }: UserLocalInput
-  ): Promise<UserLocalResult> {
-    const result = await AuthProvider.query()
-      .where({
-        kind: AuthProviderKind.LocalAuthProvider,
-        email,
-      })
-      .first();
-
-    if (!!result) {
-      if (!!(await result.verifyPassword(password))) {
-        const identity = await result
-          .$relatedQuery("identity")
-          .withGraphFetched({
-            providers: true,
-          });
-
-        req.session!.userId = identity.id;
-
-        return { identity };
-      }
-    }
-
-    return {
-      errors: [
-        {
-          field: "email",
-          message: "Email or passsword is incorrect.",
-        },
-      ],
-    };
+    input: UserLocalInput
+  ) {
+    return AuthService.loginUserLocal(input, context);
   }
 
   @Mutation(() => UserLocalResult)

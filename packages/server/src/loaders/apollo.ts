@@ -5,6 +5,7 @@ import path from "path";
 import { redisConnection } from "./redis";
 import { knexConnection } from "./database";
 import { authChecker } from "../utils/auth.checker";
+import { Container } from "typedi";
 
 export const apolloLoader = async ({ expressApp: app }: LoaderType) => {
   const schema = await buildSchema({
@@ -12,6 +13,7 @@ export const apolloLoader = async ({ expressApp: app }: LoaderType) => {
     validate: false,
     emitSchemaFile: true,
     authChecker,
+    container: Container
   });
 
   const server = new ApolloServer({

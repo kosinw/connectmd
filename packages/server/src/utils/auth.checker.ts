@@ -9,9 +9,11 @@ export const authChecker: AuthChecker<ContextType> = async (
   if (!!req.session.userId) {
     const query = UserIdentity.query().findById(req.session.userId);
 
-    for (let i = 0; i < roles.length; ++i) {
-      query.orWhere("role", ">=", roles[i]);
-    }
+    query.andWhere((qb) => {
+      for (let i = 0; i < roles.length; ++i) {
+        qb.orWhere("role", ">=", roles[i]);
+      }
+    });
 
     return !!(await query);
   }

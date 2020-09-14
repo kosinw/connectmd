@@ -47,6 +47,7 @@
     "pino": "^6.5.1",
     "pino-colada": "^2.1.0",
     "reflect-metadata": "^0.1.13",
-    "type-graphql": "^1.0.0"
+    "type-graphql": "^1.0.0",
+    "typedi": "^0.8.0"
   }
 }

@@ -54,7 +54,7 @@ enum ProfileKind {
 
 type Query {
   me: UserIdentity!
-  users(limit: Float): [UserIdentity!]!
+  users(limit: Int): [UserIdentity!]!
 }
 
 type StudentProfile implements UserProfile {
