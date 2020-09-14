@@ -39,11 +39,9 @@ yarn build:server
 ```
 
 ## Contributing
-This repository follows the [git flow workflow](https://www.atlassian.com/git/tutorials/comparing-workflows/gitflow-workflow) for creating branches. In addition, we use [semantic versioning](https://semver.org/) for release versioning and [conventional commits](https://www.conventionalcommits.org/en/v1.0.0/). Before contributing to this project please make sure you familiarize yourself with these technologies.
+
+This repository follows the [GitHub workflow](https://guides.github.com/introduction/flow/) for creating branches. In addition, we use [semantic versioning](https://semver.org/) for release versioning, [conventional commits](https://www.conventionalcommits.org/en/v1.0.0/) for names of commit messages, issues, and pull requests, and finally we use [standard-version](https://github.com/conventional-changelog/standard-version) to handle releases. Before contributing to this project please make sure you familiarize yourself with these technologies.
 
 Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change. Note, that pull requests and issues are at the total discretion of the maintainer and will be rejected if they do not follow the [contributing guidelines](##Contributing).
 
 Please make sure to update tests as appropriate.
-
-## License
-[Creative Commons NC-ND 4.0 International](LICENSE.md)
