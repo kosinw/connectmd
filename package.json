@@ -1,16 +1,18 @@
 {
   "name": "connectmd",
   "private": true,
-  "version": "0.0.0",
+  "version": "0.1.0",
   "devDependencies": {
     "commitizen": "^4.2.1",
     "cz-conventional-changelog": "3.3.0",
     "husky": "^4.2.5",
     "prettier": "^2.1.1",
-    "pretty-quick": "^3.0.0"
+    "pretty-quick": "^3.0.0",
+    "standard-version": "^9.0.0"
   },
   "scripts": {
     "dev:server": "yarn workspace @connectmd/server dev",
+    "release": "standard-version",
     "commit": "cz",
     "pre-commit": "pretty-quick --staged",
     "post-commit": "git update-index -g",
