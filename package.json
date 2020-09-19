@@ -1,39 +1,32 @@
 {
   "name": "connectmd",
-  "private": true,
   "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "commit": "commit",
+    "release": "standard-version"
+  },
+  "dependencies": {
+    "next": "9.5.3",
+    "react": "16.13.1",
+    "react-dom": "16.13.1"
+  },
   "devDependencies": {
     "@commitlint/cli": "^11.0.0",
     "@commitlint/config-conventional": "^11.0.0",
-    "commitizen": "^4.2.1",
-    "cz-conventional-changelog": "3.3.0",
-    "husky": "^4.2.5",
-    "prettier": "^2.1.1",
-    "pretty-quick": "^3.0.0",
-    "standard-version": "^9.0.0"
-  },
-  "scripts": {
-    "dev:server": "yarn workspace @connectmd/server dev",
-    "release": "standard-version",
-    "commit": "cz",
-    "pre-commit": "pretty-quick --staged",
-    "post-commit": "git update-index -g",
-    "pretty": "prettier --write \"./**/*.{ts,tsx}\""
+    "@commitlint/prompt-cli": "^11.0.0",
+    "@types/node": "^14.11.1",
+    "@types/react": "^16.9.49",
+    "husky": "^4.3.0",
+    "standard-version": "^9.0.0",
+    "typescript": "^4.0.3"
   },
   "husky": {
     "hooks": {
-      "pre-commit": "yarn pre-commit",
-      "post-commit": "yarn post-commit",
       "commit-msg": "commitlint -E HUSKY_GIT_PARAMS"
-    }
-  },
-  "workspaces": [
-    "packages/*"
-  ],
-  "useWorkspaces": true,
-  "config": {
-    "commitizen": {
-      "path": "./node_modules/cz-conventional-changelog"
     }
   }
 }
