@@ -1,9 +1,11 @@
-import { Navbar } from "components/navbar";
+import { Shell } from "components/shell";
 
 export default function Home() {
   return (
     <>
-      <Navbar />
+      <Shell>
+        <h1>Home</h1>
+      </Shell>
     </>
   );
 }

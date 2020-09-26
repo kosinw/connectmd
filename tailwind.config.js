@@ -13,11 +13,13 @@ module.exports = {
       },
       fontFamily: {
         sans: ["Inter", ...defaultTheme.fontFamily.sans],
-        source: ["Nunito", ...defaultTheme.fontFamily.sans],
-        system: defaultTheme.fontFamily.sans,
       },
     },
   },
   variants: {},
-  plugins: [],
+  plugins: [
+    require("@tailwindcss/ui")({
+      layout: "sidebar",
+    }),
+  ],
 };
