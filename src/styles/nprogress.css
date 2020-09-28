@@ -1,3 +1,4 @@
 #nprogress .bar {
   background-color: #2b6cb0 !important;
+  height: 3px;
 }

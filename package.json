@@ -10,23 +10,28 @@
     "commit": "cz"
   },
   "dependencies": {
+    "@chakra-ui/core": "^0.8.0",
+    "@emotion/core": "^10.0.35",
+    "@emotion/styled": "^10.0.27",
+    "emotion-theming": "^10.0.27",
     "firebase": "^7.21.1",
+    "formik": "^2.1.5",
     "next": "9.5.3",
     "nprogress": "^0.2.0",
     "react": "16.13.1",
     "react-dom": "16.13.1",
-    "react-firebase-hooks": "^2.2.0",
-    "swr": "^0.3.5"
+    "swr": "^0.3.5",
+    "yup": "^0.29.3"
   },
   "devDependencies": {
-    "@commitlint/cli": "^11.0.0",
-    "@commitlint/config-conventional": "^11.0.0",
     "@svgr/webpack": "^5.4.0",
+    "@tailwindcss/custom-forms": "^0.2.1",
     "@tailwindcss/ui": "^0.6.2",
     "@tailwindui/react": "^0.1.1",
     "@types/node": "^14.11.1",
     "@types/nprogress": "^0.2.0",
     "@types/react": "^16.9.49",
+    "@types/yup": "^0.29.7",
     "commitizen": "^4.2.1",
     "cz-conventional-changelog": "3.3.0",
     "husky": "^4.3.0",
@@ -40,7 +45,6 @@
   },
   "husky": {
     "hooks": {
-      "commit-msg": "commitlint -E HUSKY_GIT_PARAMS",
       "pre-commit": "pretty-quick --staged"
     }
   },

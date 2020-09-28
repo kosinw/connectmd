@@ -1,14 +1,14 @@
 import { Shell } from "components/shell";
 import { NextPage } from "next";
 
-const HomePage: NextPage = () => {
+const FollowingPage: NextPage = () => {
   return (
     <>
       <Shell>
-        <h1>Home</h1>
+        <h1>Following</h1>
       </Shell>
     </>
   );
 };
 
-export default HomePage;
+export default FollowingPage;
