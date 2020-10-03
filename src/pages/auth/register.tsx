@@ -1,25 +1,32 @@
 import { NextPage } from "next";
 import Link from "next/link";
 
-import { RegisterForm } from "components/register.form";
+import { RegisterForm } from "components/forms/register.form";
 
 import BrandSmall from "vectors/brand-small.svg";
 import LeftIcon from "vectors/left.icon.svg";
 
-import styles from "styles/register.module.css";
+import styles from "styles/login.module.css";
 import { NoAuthRoute } from "components/protect.route";
 
+import { useRouter } from "next/router";
+
 const RegisterPresentation: React.FC<{}> = ({}) => {
+  const router = useRouter();
+
   return (
     <div className="w-full shadow overflow-y-auto">
-      <div className="flex flex-col items-center w-full mx-auto md:px-8 lg:px-15 my-9 max-w-xs sm:max-w-sm md:max-w-full">
+      <div className="flex flex-col items-center w-full mx-auto md:px-8 lg:px-15 mt-8 max-w-xs sm:max-w-sm md:max-w-full">
         <div className="w-full">
-          <Link href="/">
-            <a className="group flex flex-row space-x-2 items-center text-md leading-6 text-gray-900 font-bold focus:outline-none focus:underline">
+          <div className="min-w-0 float-left">
+            <a
+              onClick={(e) => router.back()}
+              className="group flex flex-row space-x-2 items-center text-md leading-6 text-gray-900 font-bold focus:outline-none focus:underline cursor-pointer"
+            >
               <LeftIcon className="group-hover:text-blue-600 h-4 w-auto fill-current" />
               <p className="group-hover:text-blue-600">Back</p>
             </a>
-          </Link>
+          </div>
         </div>
         <div className="w-full mt-9">
           <BrandSmall className="w-auto h-12 fill-current text-blue-600" />
@@ -40,6 +47,17 @@ const RegisterPresentation: React.FC<{}> = ({}) => {
         <div className="mt-7 w-full">
           <RegisterForm />
         </div>
+        <div className="mt-5 w-full">
+          <p className="text-xs text-gray-500">
+            By clicking "Sign up", you agree to our{" "}
+            <Link href="/docs/legal">
+              <a className="text-blue-600 hover:underline focus:text-blue-500">
+                Terms of Service
+              </a>
+            </Link>
+            .
+          </p>
+        </div>
       </div>
     </div>
   );
@@ -50,7 +68,7 @@ const RegisterPage: NextPage = ({}) => {
     <div className="h-screen bg-white w-full overflow-hidden">
       <div className="flex flex-row h-full w-full">
         <div
-          className={`hidden md:flex md:w-7/12 lg:w-8/12 flex-shrink-0 ${styles.registerHero}`}
+          className={`hidden md:flex md:w-7/12 lg:w-8/12 flex-shrink-0 ${styles.loginHero}`}
         ></div>
         <RegisterPresentation />
       </div>

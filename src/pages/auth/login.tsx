@@ -2,7 +2,7 @@ import { NextPage } from "next";
 import Link from "next/link";
 import { useRouter } from "next/router";
 
-import { LoginForm } from "components/login.form";
+import { LoginForm } from "components/forms/login.form";
 
 import BrandSmall from "vectors/brand-small.svg";
 import LeftIcon from "vectors/left.icon.svg";
@@ -11,12 +11,12 @@ import GoogleIcon from "vectors/google.icon.svg";
 import styles from "styles/login.module.css";
 import { useAuth } from "hooks/firebase";
 import { useToast } from "@chakra-ui/core";
-import { useEffect } from "react";
 import { NoAuthRoute } from "components/protect.route";
 
 const LoginPresentation: React.FC<{}> = ({}) => {
   const { loginGoogle } = useAuth();
   const toast = useToast();
+  const router = useRouter();
 
   const handleGoogleButton = async () => {
     try {
@@ -26,7 +26,6 @@ const LoginPresentation: React.FC<{}> = ({}) => {
         toast({
           title: "Sign in unsuccessful!",
           description: ex.message,
-          duration: 4000,
           status: "error",
           isClosable: true,
         });
@@ -36,14 +35,17 @@ const LoginPresentation: React.FC<{}> = ({}) => {
 
   return (
     <div className="w-full shadow overflow-y-auto">
-      <div className="flex flex-col items-center w-full mx-auto md:px-8 lg:px-15 my-9 max-w-xs sm:max-w-sm md:max-w-full">
+      <div className="flex flex-col items-center w-full mx-auto md:px-8 lg:px-15 mt-8 max-w-xs sm:max-w-sm md:max-w-full">
         <div className="w-full">
-          <Link href="/">
-            <a className="group flex flex-row space-x-2 items-center text-md leading-6 text-gray-900 font-bold focus:outline-none focus:underline">
+          <div className="min-w-0 float-left">
+            <a
+              onClick={(e) => router.back()}
+              className="group flex flex-row space-x-2 items-center text-md leading-6 text-gray-900 font-bold focus:outline-none focus:underline cursor-pointer"
+            >
               <LeftIcon className="group-hover:text-blue-600 h-4 w-auto fill-current" />
               <p className="group-hover:text-blue-600">Back</p>
             </a>
-          </Link>
+          </div>
         </div>
         <div className="w-full mt-9">
           <BrandSmall className="w-auto h-12 fill-current text-blue-600" />

@@ -21,15 +21,10 @@ import MenuIcon from "vectors/menu.icon.svg";
 import { useAuth } from "hooks/firebase";
 import { useToast } from "@chakra-ui/core";
 import { useRouter } from "next/router";
-import { Dispatch, SetStateAction, useRef, useState } from "react";
+import { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
 import { useEventListener } from "hooks/event";
 
-interface ShellProps {
-  children: JSX.Element;
-}
-
 interface NavigationLinkProps {
-  children: JSX.Element;
   url: string;
   title: string;
 }
@@ -75,16 +70,15 @@ export const ShellHeader: React.FC<{
       searchRef.current.focus();
     }
   }
-
   useEventListener("keydown", handleKeyDown);
 
-  const { user, logout } = useAuth();
+  const { user, logout, isAuthenticated } = useAuth();
   const toast = useToast();
 
   const handleLogoutClicked = async (
     e: React.MouseEvent<HTMLButtonElement>
   ) => {
-    if (!!user) {
+    if (isAuthenticated) {
       e.preventDefault();
       try {
         await logout();
@@ -93,7 +87,6 @@ export const ShellHeader: React.FC<{
           title: "Sign out successful!",
           description: "You have signed out of your account.",
           status: "success",
-          duration: 4000,
           isClosable: true,
         });
       } catch (ex) {
@@ -101,7 +94,6 @@ export const ShellHeader: React.FC<{
           title: "Sign out unsuccessful!",
           description: ex.message,
           status: "error",
-          duration: 4000,
           isClosable: true,
         });
       }
@@ -110,7 +102,6 @@ export const ShellHeader: React.FC<{
 
   type AuthButtonProps = {
     title: string;
-    children: React.ReactElement;
     [x: string]: any;
   };
 
@@ -166,7 +157,7 @@ export const ShellHeader: React.FC<{
                   <AuthButton title="Sign in">
                     <div className="flex flex-row space-x-2">
                       <LoginIcon className="w-6 h-6 stroke-current" />
-                      <p>Sign in</p>
+                      <p className="font-semibold">Sign in</p>
                     </div>
                   </AuthButton>
                 </Link>
@@ -181,8 +172,8 @@ export const ShellHeader: React.FC<{
 
 export const ShellNavigation: React.FC<{}> = ({}) => {
   return (
-    <nav className="bg-white border-gray-200 border-2 h-full">
-      <div className="flex flex-col py-5 px-4 space-y">
+    <nav className="bg-white border-gray-200 border-2 h-full overflow-y-auto">
+      <div className="flex flex-col py-5 px-4 space-y h-full">
         <div className="flex-shrink-0">
           <Link href="/">
             <a className="hover:text-blue-600">
@@ -227,7 +218,7 @@ export const ShellMobileNavigation: React.FC<{
   setMobileOpen: Dispatch<SetStateAction<boolean>>;
 }> = ({ mobileOpen, setMobileOpen }) => {
   return (
-    <Transition show={mobileOpen} className="absolute inset-0 z-40 flex">
+    <Transition show={mobileOpen} className="absolute inset-0 z-40 flex h-full">
       {/* Off-canvas menu overlay, show/hide based on off-canvas menu state. */}
       <Transition.Child
         enter="transition-opacity ease-linear duration-300"
@@ -253,7 +244,7 @@ export const ShellMobileNavigation: React.FC<{
         leave="transition ease-in-out duration-300 transform"
         leaveFrom="translate-x-0"
         leaveTo="-translate-x-full"
-        className="relative flex flex-col flex-1 w-full max-w-xs"
+        className="relative flex flex-col flex-1 w-full max-w-xs h-full"
       >
         <div className="absolute top-0 right-0 p-1 -mr-14">
           <Transition.Child
@@ -263,7 +254,7 @@ export const ShellMobileNavigation: React.FC<{
             leave="transition-opacity duration-300"
             leaveFrom="opacity-100"
             leaveTo="opacity-0"
-            className="flex items-center justify-center w-12 h-12  rounded-full focus:outline-none focus:bg-cool-gray-600"
+            className="flex items-center justify-center w-12 h-12 rounded-full focus:outline-none focus:bg-cool-gray-600"
             aria-label="Close sidebar"
             as="button"
             onClick={() => setMobileOpen(false)}
@@ -280,7 +271,7 @@ export const ShellMobileNavigation: React.FC<{
   );
 };
 
-export const Shell: React.FC<ShellProps> = ({ children }) => {
+export const Shell: React.FC<{}> = ({ children }) => {
   const [mobileOpen, setMobileOpen] = useState<boolean>(false);
 
   useEventListener("keyup", (e: KeyboardEvent) => {

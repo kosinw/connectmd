@@ -29,9 +29,16 @@ export const useAuth = () => {
   return useContext(AuthContext);
 };
 
-type EmailPasswordFunction = (
+type LoginFunction = (
   email: string,
   password: string,
+  rememberMe?: boolean
+) => Promise<firebase.User>;
+
+type RegisterFunction = (
+  email: string,
+  password: string,
+  displayName: string,
   rememberMe?: boolean
 ) => Promise<firebase.User>;
 
@@ -42,8 +49,8 @@ type ThirdPartyFunction = () => Promise<void>;
 interface AuthHookValues {
   user: firebase.User;
   isAuthenticated: boolean;
-  login: EmailPasswordFunction;
-  register: EmailPasswordFunction;
+  login: LoginFunction;
+  register: RegisterFunction;
   logout: LogoutFunction;
   loginGoogle: ThirdPartyFunction;
 }
@@ -66,7 +73,7 @@ function useProvideAuth(): AuthHookValues {
     setAuthenticated(!!user);
   }, [user]);
 
-  const login: EmailPasswordFunction = async (email, password, rememberMe) => {
+  const login: LoginFunction = async (email, password, rememberMe) => {
     if (rememberMe) {
       await firebase
         .auth()
@@ -86,9 +93,10 @@ function useProvideAuth(): AuthHookValues {
     return response.user;
   };
 
-  const register: EmailPasswordFunction = async (
+  const register: RegisterFunction = async (
     email,
     password,
+    displayName,
     rememberMe
   ) => {
     if (rememberMe) {
@@ -104,6 +112,11 @@ function useProvideAuth(): AuthHookValues {
     const response = await firebase
       .auth()
       .createUserWithEmailAndPassword(email, password);
+
+    response.user.updateProfile({
+      photoURL: `https://www.gravatar.com/avatar/${md5(user.uid)}?d=identicon`,
+      displayName,
+    });
 
     setUser(response.user);
 

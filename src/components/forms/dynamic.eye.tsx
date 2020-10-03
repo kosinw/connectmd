@@ -1,8 +1,14 @@
 import Eye from "vectors/eye.icon.svg";
 import EyeOff from "vectors/eye.off.icon.svg";
 
-export const EyeButton: (hidden) => React.FC<{ [x: string]: any }> = (
-  hidden
-) => ({ ...restProps }) => {
+interface DyanmicEyeProps {
+  hidden: boolean;
+  [x: string]: any;
+}
+
+export const DynamicEye: React.FC<DyanmicEyeProps> = ({
+  hidden,
+  ...restProps
+}) => {
   return hidden ? <EyeOff {...restProps} /> : <Eye {...restProps} />;
 };
