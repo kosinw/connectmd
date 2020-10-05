@@ -1,29 +1,24 @@
-import { useAuth } from "hooks/firebase";
-import { useRouter } from "next/router";
-import { useEffect } from "react";
+import nookies from "nookies";
+import { GetServerSidePropsContext } from "next";
+import { admin } from "libs/firebase.admin";
 
-export const NoAuthRoute = (Component, ...rest) => {
-  return () => {
-    const { isAuthenticated } = useAuth();
-    const router = useRouter();
+export const redirectNoAuth = async (
+  context: GetServerSidePropsContext,
+  url: string = "/"
+) => {
+  try {
+    const { authToken } = nookies.get(context);
 
-    useEffect(() => {
-      if (isAuthenticated) router.replace("/");
-    }, [isAuthenticated]);
+    const { res } = context;
 
-    return <Component {...rest} />;
-  };
+    const goodToken = await admin.auth().verifyIdToken(authToken, true);
+
+    if (!!goodToken) {
+      res.writeHead(301, {
+        Location: url,
+      });
+
+      res.end();
+    }
+  } catch (err) {}
 };
-
-export function ProtectRoute(Component, ...rest) {
-  return () => {
-    const { isAuthenticated } = useAuth();
-    const router = useRouter();
-
-    useEffect(() => {
-      if (!!isAuthenticated) router.replace("/auth/login");
-    }, [isAuthenticated]);
-
-    return <Component {...rest} />;
-  };
-}

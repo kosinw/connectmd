@@ -12,7 +12,7 @@ export const EmailField: React.FC<EmailFieldProps> = ({ error }) => {
       </label>
       <Field
         className={`w-full block form-input ${!!error && "border-red-600"}`}
-        type="email"
+        type="text"
         name="email"
         autoComplete="email"
       />

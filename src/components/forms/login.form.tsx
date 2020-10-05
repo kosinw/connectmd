@@ -43,7 +43,11 @@ export const LoginForm: React.FC<{}> = () => {
 
   return (
     <Formik
-      initialValues={{}}
+      initialValues={{
+        email: "",
+        password: "",
+        rememberMe: false,
+      }}
       validationSchema={schema}
       onSubmit={handleFormSubmit}
     >

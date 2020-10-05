@@ -5,7 +5,10 @@ const HomePage: NextPage = () => {
   return (
     <>
       <Shell>
-        <h1>Home</h1>
+        <div className="container mx-auto max-w-7xl py-6 px-8">
+          <h1 className="font-extrabold text-4xl">Home</h1>
+          <p>Testing 123</p>
+        </div>
       </Shell>
     </>
   );

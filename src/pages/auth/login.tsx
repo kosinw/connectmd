@@ -1,4 +1,4 @@
-import { NextPage } from "next";
+import { NextPage, GetServerSideProps } from "next";
 import Link from "next/link";
 import { useRouter } from "next/router";
 
@@ -11,7 +11,7 @@ import GoogleIcon from "vectors/google.icon.svg";
 import styles from "styles/login.module.css";
 import { useAuth } from "hooks/firebase";
 import { useToast } from "@chakra-ui/core";
-import { NoAuthRoute } from "components/protect.route";
+import { redirectNoAuth } from "components/protect.route";
 
 const LoginPresentation: React.FC<{}> = ({}) => {
   const { loginGoogle } = useAuth();
@@ -35,7 +35,7 @@ const LoginPresentation: React.FC<{}> = ({}) => {
 
   return (
     <div className="w-full shadow overflow-y-auto">
-      <div className="flex flex-col items-center w-full mx-auto md:px-8 lg:px-15 mt-8 max-w-xs sm:max-w-sm md:max-w-full">
+      <div className="flex flex-col items-center w-full mx-auto md:px-8 lg:px-15 mt-8 mb-2 max-w-xs sm:max-w-sm md:max-w-full">
         <div className="w-full">
           <div className="min-w-0 float-left">
             <a
@@ -102,4 +102,12 @@ const LoginPage: NextPage = ({}) => {
   );
 };
 
-export default NoAuthRoute(LoginPage);
+export const getServerSideProps: GetServerSideProps = async (context) => {
+  if (typeof window === "undefined") {
+    await redirectNoAuth(context, "/");
+  }
+
+  return { props: {} };
+};
+
+export default LoginPage;

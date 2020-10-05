@@ -1,8 +1,11 @@
 import firebase from "firebase/app";
-import "firebase/auth";
+import md5 from "md5";
+import nookies from "nookies";
 
 import { createContext, useContext, useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/router";
+
+import "firebase/auth";
 
 const firebaseConfig = {
   apiKey: "AIzaSyCdnrF_AkIQq_Y-pWTggjqsBMOH5RZPeF0",
@@ -23,7 +26,7 @@ const providers = {
   google: new firebase.auth.GoogleAuthProvider(),
 };
 
-const AuthContext = createContext<AuthHookValues>({} as AuthHookValues);
+const AuthContext = createContext<useAuthOptions>({} as useAuthOptions);
 
 export const useAuth = () => {
   return useContext(AuthContext);
@@ -46,7 +49,7 @@ type LogoutFunction = () => Promise<void>;
 
 type ThirdPartyFunction = () => Promise<void>;
 
-interface AuthHookValues {
+interface useAuthOptions {
   user: firebase.User;
   isAuthenticated: boolean;
   login: LoginFunction;
@@ -55,16 +58,27 @@ interface AuthHookValues {
   loginGoogle: ThirdPartyFunction;
 }
 
-function useProvideAuth(): AuthHookValues {
+function useProvideAuth(): useAuthOptions {
   const [user, setUser] = useState<firebase.User>(null);
   const [isAuthenticated, setAuthenticated] = useState<boolean>(false);
 
   const router = useRouter();
 
   useEffect(() => {
-    const unsubscribe = firebase
-      .auth()
-      .onAuthStateChanged((user) => setUser(user));
+    const unsubscribe = firebase.auth().onAuthStateChanged(async (user) => {
+      setUser(user);
+      if (!!user) {
+        const token = await user.getIdToken();
+        nookies.set(undefined, "authToken", token, {
+          maxAge: 30 * 24 * 60 * 60,
+          path: "/",
+        });
+      } else {
+        nookies.destroy(undefined, "authToken", {
+          path: "/",
+        });
+      }
+    });
 
     return () => unsubscribe();
   }, []);
@@ -88,7 +102,7 @@ function useProvideAuth(): AuthHookValues {
       .auth()
       .signInWithEmailAndPassword(email, password);
 
-    setUser(response.user);
+    // setUser(response.user);
 
     return response.user;
   };
@@ -113,25 +127,27 @@ function useProvideAuth(): AuthHookValues {
       .auth()
       .createUserWithEmailAndPassword(email, password);
 
-    response.user.updateProfile({
-      photoURL: `https://www.gravatar.com/avatar/${md5(user.uid)}?d=identicon`,
+    await response.user.updateProfile({
+      photoURL: `https://www.gravatar.com/avatar/${md5(
+        response.user.uid
+      )}?d=identicon`,
       displayName,
     });
 
-    setUser(response.user);
+    // setUser(response.user);
 
     return response.user;
   };
 
   const logout: LogoutFunction = async () => {
     await firebase.auth().signOut();
-    setUser(null);
+    // setUser(null);
   };
 
   const loginGoogle: ThirdPartyFunction = async () => {
     const response = await firebase.auth().signInWithPopup(providers.google);
 
-    setUser(response.user);
+    // setUser(response.user);
 
     router.push("/");
   };

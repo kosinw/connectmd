@@ -1,4 +1,4 @@
-import { NextPage } from "next";
+import { GetServerSideProps, NextPage } from "next";
 import Link from "next/link";
 
 import { RegisterForm } from "components/forms/register.form";
@@ -7,16 +7,16 @@ import BrandSmall from "vectors/brand-small.svg";
 import LeftIcon from "vectors/left.icon.svg";
 
 import styles from "styles/login.module.css";
-import { NoAuthRoute } from "components/protect.route";
 
 import { useRouter } from "next/router";
+import { redirectNoAuth } from "components/protect.route";
 
 const RegisterPresentation: React.FC<{}> = ({}) => {
   const router = useRouter();
 
   return (
     <div className="w-full shadow overflow-y-auto">
-      <div className="flex flex-col items-center w-full mx-auto md:px-8 lg:px-15 mt-8 max-w-xs sm:max-w-sm md:max-w-full">
+      <div className="flex flex-col items-center w-full mx-auto md:px-8 lg:px-15 mt-8 mb-2 max-w-xs sm:max-w-sm md:max-w-full">
         <div className="w-full">
           <div className="min-w-0 float-left">
             <a
@@ -76,4 +76,12 @@ const RegisterPage: NextPage = ({}) => {
   );
 };
 
-export default NoAuthRoute(RegisterPage);
+export const getServerSideProps: GetServerSideProps = async (context) => {
+  if (typeof window === "undefined") {
+    await redirectNoAuth(context, "/");
+  }
+
+  return { props: {} };
+};
+
+export default RegisterPage;
