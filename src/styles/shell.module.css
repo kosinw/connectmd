@@ -1,9 +1,0 @@
-@layer components {
-  .activeRoute {
-    @apply text-blue-700 bg-gray-100 rounded-md;
-  }
-
-  .inactiveRoute {
-    @apply text-gray-500;
-  }
-}

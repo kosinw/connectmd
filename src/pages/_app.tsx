@@ -1,9 +1,11 @@
 import Head from "next/head";
 import Router from "next/router";
-
 import nprogress from "nprogress";
+
 import { ProvideAuth } from "hooks/firebase";
-import { ThemeProvider, theme } from "@chakra-ui/core";
+import { ChakraProvider } from "@chakra-ui/core";
+
+import { theme } from "theme";
 
 import "nprogress/nprogress.css";
 import "styles/index.css";
@@ -22,19 +24,15 @@ function App({ Component, pageProps }) {
         <title>ConnectMD &#8211; Connecting doctors around the world.</title>
         <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
         <link rel="alternate icon" href="/favicon.ico" />
+        <link
+          rel="stylesheet"
+          href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;900&display=swap"
+        />
       </Head>
       <ProvideAuth>
-        <ThemeProvider
-          theme={{
-            ...theme,
-            fonts: {
-              ...theme.fonts,
-              body: "Inter, " + theme.fonts.body,
-            },
-          }}
-        >
+        <ChakraProvider theme={theme}>
           <Component {...pageProps} />
-        </ThemeProvider>
+        </ChakraProvider>
       </ProvideAuth>
     </>
   );
