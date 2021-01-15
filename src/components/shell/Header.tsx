@@ -200,7 +200,7 @@ export const ShellHeader: React.FC<{
     <Box as="header" w="100%" boxShadow="sm" borderBottomWidth={2} h={16}>
       <HStack h="100%" w="100%">
         <ShellHeaderHamburger onMobileOpen={onMobileOpen} />
-        <ShellHeaderSearchBar ml={2} />
+        <ShellHeaderSearchBar />
       </HStack>
     </Box>
   );
